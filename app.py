@@ -1,7 +1,9 @@
 import streamlit as st
 import spacy
 
-# Load model
+import spacy.cli
+spacy.cli.download("en_core_web_sm")
+
 nlp = spacy.load("en_core_web_sm")
 
 # -------- CSS ----------
