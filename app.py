@@ -1,10 +1,4 @@
 import streamlit as st
-import spacy
-
-import spacy.cli
-spacy.cli.download("en_core_web_sm")
-
-nlp = spacy.load("en_core_web_sm")
 
 # -------- CSS ----------
 st.markdown("""
@@ -33,7 +27,7 @@ h1 {
     border-left:5px solid #6C63FF;
 }
 
-.entities-box {
+.risk-box {
     background:#fff4f4;
     padding:15px;
     border-radius:10px;
@@ -47,7 +41,6 @@ h1 {
 col1, col2 = st.columns([1,2])
 
 with col1:
-    # Animated man GIF
     st.image(
         "https://img.freepik.com/premium-vector/boy-pointing-right-with-yellow-background_723224-1521.jpg",
         width=200
@@ -73,12 +66,28 @@ if file:
         unsafe_allow_html=True
     )
 
-    doc = nlp(text)
+    # -------- Risk Detection ----------
+    risk_words = [
+        "penalty",
+        "terminate",
+        "liability",
+        "breach",
+        "damages",
+        "lawsuit",
+        "fine",
+        "legal action"
+    ]
 
-    st.subheader("Entities Found")
-    st.markdown("<div class='entities-box'>", unsafe_allow_html=True)
+    found_risks = [word for word in risk_words if word in text.lower()]
 
-    for ent in doc.ents:
-        st.write(f"**{ent.text}** → {ent.label_}")
+    st.subheader("⚠️ Risks Found")
+
+    st.markdown("<div class='risk-box'>", unsafe_allow_html=True)
+
+    if found_risks:
+        for word in found_risks:
+            st.write(f"⚠️ Risk keyword found: **{word}**")
+    else:
+        st.write("✅ No major risks detected")
 
     st.markdown("</div>", unsafe_allow_html=True)
